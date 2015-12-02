@@ -13,3 +13,4 @@ set number
 set nocompatible
 set viminfo^=!
 
+call matchadd('ColorColumn', '\%81v', 100)
