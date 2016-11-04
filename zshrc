@@ -1,13 +1,12 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/home/thomas/.oh-my-zsh
+  export ZSH=/home/tpei/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell"
-#ZSH_THEME="agnoster"
-#ZSH_THEME="powerlevel9k"
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -54,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/thomas/bin"
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -83,18 +82,52 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias fuck='$(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
 alias gf='cd ~/Code/gapfish'
+alias gpro='cd ~/Code/gapfish_prophet'
 alias pull='git pull'
-alias co='git co'
+alias co='git checkout'
 alias merge='git merge'
+alias mergelast='git merge @{-1}'
+alias goback='git checkout @{-1}'
+alias stagepush='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
+alias prodpush='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
 alias commit='git commit'
 alias push='git push'
 alias status='git status'
 alias add='git add'
 alias zconf='vim ~/.zshrc'
-alias rvm='docker-compose run web rvm-shell'
+alias rvm='docker-compose run --rm web rvm-shell'
 alias diff='git diff'
 alias stash='git stash'
 alias gsa='git stash apply'
 alias vimconf='vim ~/.vimrc'
+alias zconf='vim ~/.zshrc'
+alias gcode='cd ~/Code'
+alias d='dooby'
+alias av='source env/bin/activate'
+alias dv='deactivate'
+alias tumaster='cd ~/Documents/Uni/Master/TU\ Berlin/1.\ Semester'
+
+
+# workaround for ssh key unlock bug
+SSH_ENV=$HOME/.ssh/environment
+
+# start the ssh-agent
+function start_agent {
+  echo "Initializing new SSH agent..."
+  # spawn ssh-agent
+  /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+  echo succeeded
+  chmod 600 "${SSH_ENV}"
+  . "${SSH_ENV}" > /dev/null
+  /usr/bin/ssh-add
+}
+
+if [ -f "${SSH_ENV}" ]; then
+  . "${SSH_ENV}" > /dev/null
+  ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+  start_agent;
+}
+else
+  start_agent;
+fi
