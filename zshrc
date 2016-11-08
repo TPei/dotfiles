@@ -123,6 +123,12 @@ function start_agent {
   /usr/bin/ssh-add
 }
 
+# required for vpn ssh to work correctly
+function set_mtu {
+  echo "setting mtu on wifi interface to 1480"
+  sudo ifconfig wlp3s0 mtu 1480
+}
+
 if [ -f "${SSH_ENV}" ]; then
   . "${SSH_ENV}" > /dev/null
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
@@ -130,4 +136,6 @@ if [ -f "${SSH_ENV}" ]; then
 }
 else
   start_agent;
+  # since this is only done on first startup:
+  set_mtu;
 fi
