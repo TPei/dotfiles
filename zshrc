@@ -5,7 +5,7 @@
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="robbyrussell"
+ZSH_THEME="my_muse"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -106,11 +106,14 @@ alias gcode='cd ~/Code'
 alias d='dooby'
 alias av='source env/bin/activate'
 alias dv='deactivate'
-alias tumaster='cd ~/Documents/Uni/Master/TU\ Berlin/1.\ Semester'
-
+alias kubetop='watch -n 1 kubectl get svc,deploy,rc,po,node'
 
 # workaround for ssh key unlock bug
 SSH_ENV=$HOME/.ssh/environment
+
+function init_push {
+  git push --set-upstream origin $(current_branch)
+}
 
 # start the ssh-agent
 function start_agent {
@@ -123,12 +126,6 @@ function start_agent {
   /usr/bin/ssh-add
 }
 
-# required for vpn ssh to work correctly
-function set_mtu {
-  echo "setting mtu on wifi interface to 1480"
-  sudo ifconfig wlp3s0 mtu 1480
-}
-
 if [ -f "${SSH_ENV}" ]; then
   . "${SSH_ENV}" > /dev/null
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
@@ -136,6 +133,14 @@ if [ -f "${SSH_ENV}" ]; then
 }
 else
   start_agent;
-  # since this is only done on first startup:
-  set_mtu;
+fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f /home/tpei/Downloads/google-cloud-sdk/path.zsh.inc ]; then
+  source '/home/tpei/Downloads/google-cloud-sdk/path.zsh.inc'
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f /home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
+  source '/home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc'
 fi
