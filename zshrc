@@ -53,7 +53,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/home/tpei/Code/k8s/bin:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -106,7 +106,6 @@ alias gcode='cd ~/Code'
 alias d='dooby'
 alias av='source env/bin/activate'
 alias dv='deactivate'
-alias kubetop='watch -n 1 kubectl get svc,deploy,rc,po,node'
 
 # workaround for ssh key unlock bug
 SSH_ENV=$HOME/.ssh/environment
