@@ -49,3 +49,6 @@ call janus#load_pathogen()
 au BufRead,BufNewFile *.cr setfiletype ruby
 
 " .vimrc.after is loaded after the plugins have loaded
+
+" Keymaps
+nmap <leader>m :NERDTreeFind<CR>
