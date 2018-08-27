@@ -143,3 +143,5 @@ fi
 if [ -f /home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
   source '/home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc'
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
