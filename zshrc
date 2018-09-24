@@ -1,10 +1,11 @@
 # Path to your oh-my-zsh installation.
-  export ZSH=/home/tpei/.oh-my-zsh
+export ZSH=/Users/thomas/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
+#ZSH_THEME="robbyrussell"
 ZSH_THEME="my_muse"
 
 # Uncomment the following line to use case-sensitive completion.
@@ -53,7 +54,7 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/home/tpei/Code/k8s/bin:$PATH"
+#export PATH="/Users/thomas/.rvm/gems/ruby-2.2.1/bin:/Users/thomas/.rvm/gems/ruby-2.2.1@global/bin:/Users/thomas/.rvm/rubies/ruby-2.2.1/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/thomas/bin:/Users/thomas/.rvm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -80,32 +81,91 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# general stuff
 alias gf='cd ~/Code/gapfish'
-alias gpro='cd ~/Code/gapfish_prophet'
+alias gp='cd ~/Code/gapfish_prophet'
 alias pull='git pull'
 alias co='git checkout'
 alias merge='git merge'
-alias mergelast='git merge @{-1}'
-alias goback='git checkout @{-1}'
-alias stagepush='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
-alias prodpush='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
 alias commit='git commit'
 alias push='git push'
 alias status='git status'
 alias add='git add'
 alias zconf='vim ~/.zshrc'
-alias rvm='docker-compose run --rm web rvm-shell'
+alias dcr='docker-compose run --service-ports web rvm-shell'
 alias diff='git diff'
 alias stash='git stash'
 alias gsa='git stash apply'
 alias vimconf='vim ~/.vimrc'
-alias zconf='vim ~/.zshrc'
-alias gcode='cd ~/Code'
-alias d='dooby'
+alias rspec='bundle exec rspec'
+alias rubo='bundle exec rubocop'
+alias plog='vim /Users/thomas/Code/gapfish_prophet/.elasticbeanstalk/logs/latest/i-5af273e6/var/log/puma/puma.log'
+alias hpush='git push heroku master'
+alias hmigrate='heroku run rake db:migrate'
+alias hconsole='heroku run rails console'
+alias enkey='sudo kextload /System/Library/Extensions/AppleUSBTopCase.kext/Contents/PlugIns/AppleUSBTCKeyboard.kext'
+alias diskey='sudo kextunload /System/Library/Extensions/AppleUSBTopCase.kext/Contents/PlugIns/AppleUSBTCKeyboard.kext'
+alias prepush='bundle exec rubocop && bundle exec rspec'
 alias av='source env/bin/activate'
 alias dv='deactivate'
+alias dcu='docker-compose up'
+alias dcd='docker-compose down'
+alias docker-rdi="docker images -q --filter dangling=true | xargs docker rmi"
+alias docker-rsc="docker ps -aq --no-trunc | xargs docker rm"
+alias docker-rui='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+alias jupyter="/Users/thomas/anaconda3/bin/jupyter_mac.command"
+
+# docker swarm, openFaaS and such
+alias gfaas='cd ~/Code/open_faas'
+alias -g -- -s="service" # as in docker service ls -> docker -s ls
+
+# kubernetes
+alias k=kubectl
+alias kg='k get'
+alias kl='k logs --tail=50 --follow=true'
+alias ke='k edit'
+alias kd='k describe'
+alias kdel='k delete'
+alias kaf='k apply -f'
+alias keti='k exec -ti'
+alias kcuc='k config use-context'
+alias kccc='k config current-context'
+alias kgp="k get pods"
+alias kep='k edit pods'
+alias kdp='k describe pods'
+alias kdelp='k delete pods'
+alias kgs='k get svc'
+alias kes='k edit svc'
+alias kds='k describe svc'
+alias kdels='k delete svc'
+alias kgsec='k get secret'
+alias kdsec='k describe secret'
+alias kdelsec='k delete secret'
+alias kgd='k get deployment'
+alias ked='k edit deployment'
+alias kdd='k describe deployment'
+alias kdeld='k delete deployment'
+alias ksd='k scale deployment'
+alias krsd='k rollout status deployment'
+alias kgrs='k get rs'
+alias krh='k rollout history'
+alias kru='k rollout undo'
+alias kgn='k get pods'
+alias kdn='k describe pods'
+
+alias -g -- -lo='--selector app=operations'
+alias -g -- -lus='--selector app=user-and-support'
+alias -g -- -lp='--selector app=prophet'
+alias -g -- -lor='--selector app=oreo'
+alias -g -- -ldep='--selector app=deployer'
+alias -g -- -lrc='--selector app=redis-cluster'
+alias -g -- -lda='--selector app=dashboard'
+alias -g -- -ll='--selector app=gapfish-login'
+alias -g -- -lrs='--selector app=rewe-sftp'
+alias -g -- -lm='--selector app=mongo'
+alias -g -- -lgu='--selector app=gem-updater'
+alias -g -- -ngs='--namespace gapfish-system'
 
 # workaround for ssh key unlock bug
 SSH_ENV=$HOME/.ssh/environment
@@ -125,6 +185,12 @@ function start_agent {
   /usr/bin/ssh-add
 }
 
+# required for vpn ssh to work correctly
+function set_mtu {
+  echo "setting mtu on wifi interface to 1480"
+  sudo ifconfig wlp3s0 mtu 1480
+}
+
 if [ -f "${SSH_ENV}" ]; then
   . "${SSH_ENV}" > /dev/null
   ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
@@ -132,16 +198,22 @@ if [ -f "${SSH_ENV}" ]; then
 }
 else
   start_agent;
+  # since this is only done on first startup:
+  set_mtu;
 fi
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+export PATH="$HOME/Code/k8s/bin:$PATH"
+export NODE_PATH="/usr/local/lib/node_modules"
+eval "$(rbenv init -)"
+
+# added by travis gem
+[ -f /Users/thomas/.travis/travis.sh ] && source /Users/thomas/.travis/travis.sh
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f /home/tpei/Downloads/google-cloud-sdk/path.zsh.inc ]; then
-  source '/home/tpei/Downloads/google-cloud-sdk/path.zsh.inc'
-fi
+if [ -f '/Users/thomas/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/thomas/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f /home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc ]; then
-  source '/home/tpei/Downloads/google-cloud-sdk/completion.zsh.inc'
-fi
+if [ -f '/Users/thomas/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/thomas/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
