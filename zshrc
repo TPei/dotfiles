@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/thomas/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -87,23 +87,12 @@ source $ZSH/oh-my-zsh.sh
 # general stuff
 alias gf='cd ~/Code/gapfish'
 alias gp='cd ~/Code/gapfish_prophet'
-alias pull='git pull'
-alias co='git checkout'
-alias merge='git merge'
-alias commit='git commit'
-alias push='git push'
-alias status='git status'
-alias add='git add'
 alias zconf='vim ~/.zshrc'
 alias dcr='docker-compose run --service-ports web rvm-shell'
-alias diff='git diff'
-alias stash='git stash'
-alias gsa='git stash apply'
 alias vimconf='vim ~/.vimrc'
 alias rspec='bundle exec rspec'
 alias rubo='bundle exec rubocop'
 alias plog='vim /Users/thomas/Code/gapfish_prophet/.elasticbeanstalk/logs/latest/i-5af273e6/var/log/puma/puma.log'
-alias hpush='git push heroku master'
 alias hmigrate='heroku run rake db:migrate'
 alias hconsole='heroku run rails console'
 alias enkey='sudo kextload /System/Library/Extensions/AppleUSBTopCase.kext/Contents/PlugIns/AppleUSBTCKeyboard.kext'
@@ -118,9 +107,30 @@ alias docker-rsc="docker ps -aq --no-trunc | xargs docker rm"
 alias docker-rui='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
 alias jupyter="/Users/thomas/anaconda3/bin/jupyter_mac.command"
 
+# git
+alias pull='git pull'
+alias co='git checkout'
+alias merge='git merge'
+alias commit='git commit'
+alias push='git push'
+alias status='git status'
+alias add='git add'
+alias diff='git diff'
+alias stash='git stash'
+alias gsa='git stash apply'
+alias hpush='git push heroku master'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias ga='git add'
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gfp='git push --force-with-lease'
+alias gl='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+
 # docker swarm, openFaaS and such
 alias gfaas='cd ~/Code/open_faas'
 alias -g -- -s="service" # as in docker service ls -> docker -s ls
+alias -g -- -gf="-g http://127.0.0.1:1337"
 
 # kubernetes
 alias k=kubectl
