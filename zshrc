@@ -59,7 +59,14 @@ plugins=(git tmux)
 #export PATH="/Users/thomas/.rvm/gems/ruby-2.2.1/bin:/Users/thomas/.rvm/gems/ruby-2.2.1@global/bin:/Users/thomas/.rvm/rubies/ruby-2.2.1/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/thomas/bin:/Users/thomas/.rvm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
+export GOPATH=$HOME/Code/go
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/usr/java/jre1.8.0_201/bin
+export PATH=$PATH:/home/tpei/Documents/wskdeploy
+export PATH=$PATH:/home/tpei/Code/thesis_app_store/cli
+
 source $ZSH/oh-my-zsh.sh
+source /usr/local/ibmcloud/autocomplete/zsh_autocomplete
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -102,6 +109,7 @@ alias av='source env/bin/activate'
 alias dv='deactivate'
 alias dcu='docker-compose up'
 alias dcd='docker-compose down'
+alias dce='docker-compose exec'
 alias docker-rdi="docker images -q --filter dangling=true | xargs docker rmi"
 alias docker-rsc="docker ps -aq --no-trunc | xargs docker rm"
 alias docker-rui='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
@@ -124,13 +132,20 @@ alias gdc='git diff --cached'
 alias ga='git add'
 alias gc='git commit'
 alias gca='git commit --amend'
+alias gcane='git commit --amend --no-edit'
 alias gfp='git push --force-with-lease'
 alias gl='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
+alias gsp='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
+alias gpmp='git checkout master && git pull && git checkout production && git pull && git merge master && git push && git checkout master'
 
 # docker swarm, openFaaS and such
 alias gfaas='cd ~/Code/open_faas'
 alias -g -- -s="service" # as in docker service ls -> docker -s ls
 alias -g -- -gf="-g http://127.0.0.1:1337"
+
+# OpenWhisl
+alias wsk='bx wsk'
+alias wskdp='/home/tpei/Documents/wskdeploy/wskdeploy'
 
 # kubernetes
 alias k=kubectl
@@ -178,6 +193,8 @@ alias -g -- -lrs='--selector app=rewe-sftp'
 alias -g -- -lm='--selector app=mongo'
 alias -g -- -lgu='--selector app=gem-updater'
 alias -g -- -ngs='--namespace gapfish-system'
+alias -g -- -nf='--namespace openfaas'
+alias -g -- -nfn='--namespace openfaas-fn'
 
 # workaround for ssh key unlock bug
 SSH_ENV=$HOME/.ssh/environment
