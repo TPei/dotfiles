@@ -50,9 +50,13 @@ ZSH_THEME="my_muse"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART=false
 ZSH_TMUX_AUTOCONNECT=false
 plugins=(git tmux)
+
+if [ -z "$TMUX" ]; then
+  tmux
+fi
 
 # User configuration
 
@@ -60,13 +64,24 @@ plugins=(git tmux)
 # export MANPATH="/usr/local/man:$MANPATH"
 
 export GOPATH=$HOME/Code/go
+export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/go/bin
 export PATH=$PATH:/usr/java/jre1.8.0_201/bin
 export PATH=$PATH:/home/tpei/Documents/wskdeploy
 export PATH=$PATH:/home/tpei/Code/thesis_app_store/cli
+export PATH=$PATH:/home/tpei/Code/tools/bin
+export PATH=$PATH:/home/tpei/.gem/ruby/2.5.0/bin
+# export PATH=$PATH:/usr/local/share/wemux
 
 source $ZSH/oh-my-zsh.sh
 source /usr/local/ibmcloud/autocomplete/zsh_autocomplete
+
+for dir in "/home/tpei/Code"; do
+  if [[ -d "$dir/tools/bin" ]]; then
+    export PATH=$dir/tools/bin:$PATH
+    source $dir/tools/zsh/aliases
+  fi
+done
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -114,6 +129,7 @@ alias docker-rdi="docker images -q --filter dangling=true | xargs docker rmi"
 alias docker-rsc="docker ps -aq --no-trunc | xargs docker rm"
 alias docker-rui='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
 alias jupyter="/Users/thomas/anaconda3/bin/jupyter_mac.command"
+alias wtf="~/Code/wtfutil/wtfutil"
 
 # git
 alias pull='git pull'
@@ -135,15 +151,16 @@ alias gca='git commit --amend'
 alias gcane='git commit --amend --no-edit'
 alias gfp='git push --force-with-lease'
 alias gl='git log --graph --abbrev-commit --decorate --date=relative --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --all'
-alias gsp='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
-alias gpmp='git checkout master && git pull && git checkout production && git pull && git merge master && git push && git checkout master'
+alias deploytostaging='git checkout staging && git pull && git merge @{-1} && git push && git checkout @{-1}'
+alias deployprod='git checkout master && git pull && git checkout production && git pull && git merge master && git push && git checkout master'
+alias ci='hub ci-status -v'
 
 # docker swarm, openFaaS and such
 alias gfaas='cd ~/Code/open_faas'
 alias -g -- -s="service" # as in docker service ls -> docker -s ls
 alias -g -- -gf="-g http://127.0.0.1:1337"
 
-# OpenWhisl
+# OpenWhisk
 alias wsk='bx wsk'
 alias wskdp='/home/tpei/Documents/wskdeploy/wskdeploy'
 
@@ -158,7 +175,8 @@ alias kaf='k apply -f'
 alias keti='k exec -ti'
 alias kcuc='k config use-context'
 alias kccc='k config current-context'
-alias kgp="k get pods"
+#alias kgp="k get pods"
+alias kgp="k get pods --field-selector='status.phase!=Succeeded,status.phase!=Failed'"
 alias kep='k edit pods'
 alias kdp='k describe pods'
 alias kdelp='k delete pods'
@@ -183,6 +201,7 @@ alias kdn='k describe pods'
 
 alias -g -- -lo='--selector app=operations'
 alias -g -- -lus='--selector app=user-and-support'
+alias -g -- -lust='--selector app=user-and-support'
 alias -g -- -lp='--selector app=prophet'
 alias -g -- -lor='--selector app=oreo'
 alias -g -- -ldep='--selector app=deployer'
@@ -231,10 +250,24 @@ else
   set_mtu;
 fi
 
+devops() {
+  who=${1:-tba}
+  secrets=$(kubectl get secret --context gapfish dashboard-env -o json | jq -r '.data[".env"]' | base64 -d)
+  (
+    eval $secrets
+    curl -d "{ \"auth_token\": \"${DASHING_AUTH_TOKEN}\", \"text\": \"${who}\" }" \
+      https://auth_token:${BASIC_AUTH_TOKEN}@${DASHBOARD_URL}/widgets/devops
+  )
+}
+
 export PATH="$HOME/.rbenv/bin:$PATH"
-export PATH="$HOME/Code/k8s/bin:$PATH"
+export PATH="$PATH:$HOME/Code/k8s/bin"
 export NODE_PATH="/usr/local/lib/node_modules"
 eval "$(rbenv init -)"
+
+# Base16 Shell
+BASE16_SHELL="$HOME/.config/base16-shell/"
+eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 # added by travis gem
 [ -f /Users/thomas/.travis/travis.sh ] && source /Users/thomas/.travis/travis.sh
