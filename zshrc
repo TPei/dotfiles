@@ -75,13 +75,12 @@ export PATH=$PATH:/home/tpei/.gem/ruby/2.5.0/bin
 
 source $ZSH/oh-my-zsh.sh
 source /usr/local/ibmcloud/autocomplete/zsh_autocomplete
-
-for dir in "/home/tpei/Code"; do
-  if [[ -d "$dir/tools/bin" ]]; then
-    export PATH=$dir/tools/bin:$PATH
-    source $dir/tools/zsh/aliases
-  fi
-done
+#for dir in "/home/tpei/Code"; do
+#  if [[ -d "$dir/tools/bin" ]]; then
+#    export PATH=$dir/tools/bin:$PATH
+#    source $dir/tools/zsh/aliases
+#  fi
+#done
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
