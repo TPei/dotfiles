@@ -1,0 +1,17 @@
+# to reinstall all of these run: `sed 1,1d extensions_list.txt | xargs -n 1 code --install-extension`
+CoenraadS.bracket-pair-colorizer
+eamodio.gitlens
+formulahendry.auto-rename-tag
+Hridoy.rails-snippets
+kaiwood.endwise
+karunamurti.haml
+mbessey.vscode-rufo
+octref.vetur
+rebornix.ruby
+redhat.vscode-yaml
+shd101wyy.markdown-preview-enhanced
+TabNine.tabnine-vscode
+vscodevim.vim
+waderyan.gitblame
+wingrunr21.vscode-ruby
+yzhang.markdown-all-in-one

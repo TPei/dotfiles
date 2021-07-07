@@ -1,0 +1,29 @@
+{
+    "window.zoomLevel": 0,
+    "editor.rulers": [
+        80
+    ],
+    "[ruby]": { // or [erb] / [gemfile]
+        "editor.formatOnSave": false
+    },
+    "[erb]": { // or [erb] / [gemfile]
+        "editor.formatOnSave": false
+    },
+    "[gemfile]": { // or [erb] / [gemfile]
+        "editor.formatOnSave": false
+    },
+    "ruby.format": "rubocop",
+    "ruby.codeCompletion": "rcodetools",
+    "vim.handleKeys": {
+        "<C-f>": false
+    },
+    "editor.fontSize": 12,
+    "breadcrumbs.enabled": true,
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": false,
+    "editor.tabSize": 2,
+    "workbench.editor.showTabs": false,
+    "workbench.editor.enablePreview": false,
+    "explorer.confirmDragAndDrop": false,
+    "tabnine.experimentalAutoImports": true
+}
