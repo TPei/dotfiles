@@ -1,10 +1,10 @@
 {
-    "window.zoomLevel": 0,
     "editor.rulers": [
         80
     ],
     "[ruby]": { // or [erb] / [gemfile]
-        "editor.formatOnSave": false
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "rebornix.ruby"
     },
     "[erb]": { // or [erb] / [gemfile]
         "editor.formatOnSave": false
@@ -25,5 +25,8 @@
     "workbench.editor.showTabs": false,
     "workbench.editor.enablePreview": false,
     "explorer.confirmDragAndDrop": false,
-    "tabnine.experimentalAutoImports": true
+    "tabnine.experimentalAutoImports": true,
+    "files.insertFinalNewline": true,
+    "editor.wordWrap": "on",
+    "editor.columnSelection": false
 }
