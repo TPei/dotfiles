@@ -127,7 +127,7 @@ alias dce='docker-compose exec'
 alias docker-rdi="docker images -q --filter dangling=true | xargs docker rmi"
 alias docker-rsc="docker ps -aq --no-trunc | xargs docker rm"
 alias docker-rui='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
-alias jupyter="/Users/thomas/anaconda3/bin/jupyter_mac.command"
+# alias jupyter="/Users/thomas/anaconda3/bin/jupyter_mac.command"
 alias wtf="~/Code/wtfutil/wtfutil"
 
 # git
