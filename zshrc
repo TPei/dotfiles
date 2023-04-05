@@ -106,14 +106,11 @@ source /usr/local/ibmcloud/autocomplete/zsh_autocomplete
 # Example aliases
 
 # general stuff
-alias gf='cd ~/Code/gapfish'
-alias gp='cd ~/Code/gapfish_prophet'
 alias zconf='vim ~/.zshrc'
 alias dcr='docker-compose run --service-ports web rvm-shell'
 alias vimconf='vim ~/.vimrc'
 alias rspec='bundle exec rspec'
 alias rubo='bundle exec rubocop'
-alias plog='vim /Users/thomas/Code/gapfish_prophet/.elasticbeanstalk/logs/latest/i-5af273e6/var/log/puma/puma.log'
 alias hmigrate='heroku run rake db:migrate'
 alias hconsole='heroku run rails console'
 alias enkey='sudo kextload /System/Library/Extensions/AppleUSBTopCase.kext/Contents/PlugIns/AppleUSBTCKeyboard.kext'
@@ -154,15 +151,6 @@ alias deploytostaging='git checkout staging && git pull && git merge @{-1} && gi
 alias deployprod='git checkout master && git pull && git checkout production && git pull && git merge master && git push && git checkout master'
 alias ci='hub ci-status -v'
 
-# docker swarm, openFaaS and such
-alias gfaas='cd ~/Code/open_faas'
-alias -g -- -s="service" # as in docker service ls -> docker -s ls
-alias -g -- -gf="-g http://127.0.0.1:1337"
-
-# OpenWhisk
-alias wsk='bx wsk'
-alias wskdp='/home/tpei/Documents/wskdeploy/wskdeploy'
-
 # kubernetes
 alias k=kubectl
 alias kg='k get'
@@ -172,8 +160,9 @@ alias kd='k describe'
 alias kdel='k delete'
 alias kaf='k apply -f'
 alias keti='k exec -ti'
-alias kcuc='k config use-context'
+alias kcgc='k config get-contexts'
 alias kccc='k config current-context'
+alias kcuc='k config use-context'
 #alias kgp="k get pods"
 alias kgp="k get pods --field-selector='status.phase!=Succeeded,status.phase!=Failed'"
 alias kep='k edit pods'
@@ -198,21 +187,9 @@ alias kru='k rollout undo'
 alias kgn='k get pods'
 alias kdn='k describe pods'
 
-alias -g -- -lo='--selector app=operations'
-alias -g -- -lus='--selector app=user-and-support'
-alias -g -- -lust='--selector app=user-and-support'
-alias -g -- -lp='--selector app=prophet'
-alias -g -- -lor='--selector app=oreo'
-alias -g -- -ldep='--selector app=deployer'
-alias -g -- -lrc='--selector app=redis-cluster'
-alias -g -- -lda='--selector app=dashboard'
-alias -g -- -ll='--selector app=gapfish-login'
-alias -g -- -lrs='--selector app=rewe-sftp'
-alias -g -- -lm='--selector app=mongo'
-alias -g -- -lgu='--selector app=gem-updater'
-alias -g -- -ngs='--namespace gapfish-system'
-alias -g -- -nf='--namespace openfaas'
-alias -g -- -nfn='--namespace openfaas-fn'
+alias -g -- -ns='--namespace system'
+alias -g -- -na='--namespace airflow'
+alias -g -- -nkd='--namespace kubernetes-dashboard'
 
 # workaround for ssh key unlock bug
 SSH_ENV=$HOME/.ssh/environment
@@ -248,16 +225,6 @@ else
   # since this is only done on first startup:
   set_mtu;
 fi
-
-devops() {
-  who=${1:-tba}
-  secrets=$(kubectl get secret --context gapfish dashboard-env -o json | jq -r '.data[".env"]' | base64 -d)
-  (
-    eval $secrets
-    curl -d "{ \"auth_token\": \"${DASHING_AUTH_TOKEN}\", \"text\": \"${who}\" }" \
-      https://auth_token:${BASIC_AUTH_TOKEN}@${DASHBOARD_URL}/widgets/devops
-  )
-}
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH="$PATH:$HOME/Code/k8s/bin"
