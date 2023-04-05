@@ -5,6 +5,10 @@ setopt promptsubst
 
 autoload -U add-zsh-hook
 
+# requires https://github.com/superbrothers/zsh-kubectl-prompt
+autoload -U colors; colors
+source $HOME/Developer/zsh-kubectl-prompt/kubectl.zsh
+
 local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)"
 
 PROMPT_SUCCESS_COLOR=$FG[117]
@@ -15,8 +19,30 @@ GIT_DIRTY_COLOR=$FG[133]
 GIT_CLEAN_COLOR=$FG[118]
 GIT_PROMPT_INFO=$FG[012]
 
-PROMPT='${ret_status}%{$PROMPT_SUCCESS_COLOR%}%~%{$reset_color%} %{$GIT_PROMPT_INFO%}$(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}ᐅ%{$reset_color%} '
-RPROMPT='[%*]'
+# configure RPROMPT
+function right_prompt() {
+  local color="blue"
+
+  if [[ "$ZSH_KUBECTL_CONTEXT" =~ "propuction" ]]; then
+    color=red
+  fi
+
+  if [[ "$ZSH_KUBECTL_CONTEXT" =~ "staging" ]]; then
+    color=yellow
+  fi
+  
+  if [[ "$ZSH_KUBECTL_CONTEXT" =~ "bi" ]]; then
+    color=green
+  fi
+
+  echo "%{$fg[$color]%}($ZSH_KUBECTL_PROMPT)%{$reset_color%}"
+}
+
+# UGH Warp doesn't support RPROMPT, so I had to put it in with the regular prompt!
+# PROMPT='${ret_status}%{$PROMPT_SUCCESS_COLOR%}%~%{$reset_color%} %{$GIT_PROMPT_INFO%}$(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}ᐅ%{$reset_color%} '
+# RPROMPT='$(right_prompt)'
+
+PROMPT='${ret_status}%{$PROMPT_SUCCESS_COLOR%}%~%{$reset_color%} %{$GIT_PROMPT_INFO%}$(git_prompt_info)%{$GIT_DIRTY_COLOR%}$(git_prompt_status) %{$reset_color%}%{$PROMPT_PROMPT%}ᐅ%{$reset_color%} $(right_prompt)'
 
 #RPS1="${return_code}"
 
